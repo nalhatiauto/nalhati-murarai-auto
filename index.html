@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nalhati–Murarai Auto</title>
+
+<style>
+body{
+  font-family:Arial,sans-serif;
+  text-align:center;
+  padding:30px 15px;
+  background:#f2f7ff;
+}
+.box{
+  max-width:500px;
+  margin:auto;
+  background:white;
+  padding:25px;
+  border-radius:15px;
+  box-shadow:0 2px 10px #bbb;
+}
+button{
+  padding:14px 25px;
+  border:0;
+  border-radius:10px;
+  background:#1677ff;
+  color:white;
+  font-size:18px;
+}
+a{
+  display:inline-block;
+  margin-top:20px;
+  padding:14px 20px;
+  background:#168a3a;
+  color:white;
+  text-decoration:none;
+  border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+<div class="box">
+<h2>🚖 নলহাটি → মুরারাই</h2>
+<div id="content">অবস্থান খোঁজা হচ্ছে...</div>
+</div>
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
+import { getDatabase, ref, set, onValue }
+from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDmDx3R6oPnXD5C5Z653-296SfJE5TCk0Y",
+  authDomain: "nalhati-to-murarai-auto-8a01f.firebaseapp.com",
+  databaseURL: "https://nalhati-to-murarai-auto-8a01f-default-rtdb.firebaseio.com",
+  projectId: "nalhati-to-murarai-auto-8a01f",
+  storageBucket: "nalhati-to-murarai-auto-8a01f.firebasestorage.app",
+  messagingSenderId: "116104940537",
+  appId: "1:116104940537:web:6ffcc81540a875dfd04b28"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const autoRef = ref(db, "autos/auto1");
+
+const params = new URLSearchParams(location.search);
+
+if(params.has("driver")){
+
+  document.getElementById("content").innerHTML =
+  "<p>🚖 Driver Mode</p><button id='start'>লাইভ লোকেশন চালু করুন</button><p id='status'></p>";
+
+  document.getElementById("start").onclick = () => {
+
+    navigator.geolocation.watchPosition(async position => {
+
+      const data = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+        accuracy: Math.round(position.coords.accuracy),
+        updatedAt: Date.now()
+      };
+
+      await set(autoRef, data);
+
+      document.getElementById("status").innerHTML =
+      "✅ লাইভ লোকেশন চলছে";
+
+    }, error => {
+
+      document.getElementById("status").innerHTML =
+      "❌ Location permission দিন";
+
+    }, {
+      enableHighAccuracy:true,
+      maximumAge:5000,
+      timeout:15000
+    });
+
+  };
+
+}else{
+
+  onValue(autoRef, snapshot => {
+
+    const data = snapshot.val();
+
+    if(!data){
+      document.getElementById("content").innerHTML =
+      "🚖 অটোর লাইভ লোকেশন এখন পাওয়া যাচ্ছে না।";
+      return;
+    }
+
+    document.getElementById("content").innerHTML =
+    "<p>🟢 অটো এখন লাইভ আছে</p>" +
+    "<a target='_blank' href='https://www.google.com/maps?q=" +
+    data.lat + "," + data.lng +
+    "'>📍 Google Maps-এ অটো দেখুন</a>";
+
+  });
+
+}
+
+</script>
+</body>
+</html>
