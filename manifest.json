@@ -4,9 +4,10 @@
   "display": "standalone",
   "name": "Nalhati Ride",
   "orientation": "any",
-  "scope": "/",
+  "scope": "/nalhati-murarai-auto/",
   "short_name": "Nalhati Ride",
-  "start_url": "/",
+  "start_url": "/
+  nalhati-murarai-auto/",
   "theme_color": "#ffffff",
   "id": "nalhati-ride",
   "description": "Nalhati to Murarai auto booking and live location service"
