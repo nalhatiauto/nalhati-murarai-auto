@@ -1,0 +1,11 @@
+{
+  "name": "Nalhati Ride",
+  "short_name": "Nalhati Ride",
+  "description": "Nalhati to Murarai auto booking and live location service",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2196f3",
+  "orientation": "portrait",
+  "icons": []
+}
